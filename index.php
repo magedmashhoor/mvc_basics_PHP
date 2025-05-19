@@ -3,36 +3,22 @@
 require "vendor/autoload.php";
 
 use Core\App;
-use App\Controllers\UserController;
 
+// Define your base path (if your project is not in the web root)
+$basePath = '/mvc_basics'; // Set to '' if in root
 
+// Parse the requested URI
+$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-//$user = new UserController();
-//$user->index();
+// Normalize path: remove base path and trailing slash
+$path = rtrim(str_replace($basePath, '', $uri), '/') ?: '/';
 
-
-$basePath = '/mvc_basics'; // Change this to your real folder name, or '' if root
-
-// Get the requested path
-$uri = $_SERVER['REQUEST_URI'];
-$parsedUrl = parse_url($uri);
-$path = $parsedUrl['path'] ?? '/';
-
-// Remove trailing slash unless it's just "/"
-$path = rtrim($path, '/') ?: '/';
-
-// Remove the base path if present
-if ($basePath !== '' && str_starts_with($path, $basePath)) {
-    $path = substr($path, strlen($basePath)) ?: '/';
-}
-
-$url = $path;
-
-$routes = match($url) {
-    "/"      => ["HomeController" => "index"],
-    "/about" => ["AboutController" => "index"],
-    "/user"  => ["UserController" => "index"],
-    default  => null, // fallback for 404
+$routes = match($path) {
+    "/"           => ["HomeController" => "index"],
+    "/about"      => ["AboutController" => "index"],
+    "/user"       => ["UserController" => "index"],
+    "/user/list"  => ["UserController" => "list"],
+    default       => null, // fallback to 404
 };
 
 $app = new App();
