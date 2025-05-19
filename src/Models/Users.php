@@ -2,7 +2,11 @@
 
 namespace App\Models;
 
-class Users{
+use Core\Model;
+
+class Users extends Model{
+
+    //protected string $table = 'users';
 
     public function __construct(){}
 
