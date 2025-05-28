@@ -1,5 +1,5 @@
 <?php
-
+//Request Class
 namespace Core;
 
 class Requests{
