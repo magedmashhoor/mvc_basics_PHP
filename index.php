@@ -23,19 +23,23 @@ $path = rtrim(str_replace($basePath, '', $uri), '/') ?: '/';
 // 6. ROUTE DEFINITION - Match the path to controller/action pairs
 $routes = match($path) {
     // Root path -> HomeController's index method
-    "/"           => ["HomeController" => "index"],
+    "/"                => ["HomeController" => "index"],
     
     // /about -> AboutController's index method  
-    "/about"      => ["AboutController" => "index"],
+    "/about"          => ["AboutController" => "index"],
     
     // /user -> UserController's index method
-    "/user"       => ["UserController" => "index"],
+    "/user"           => ["UserController" => "index"],
     
     // /user/list -> UserController's list method
-    "/user/list"  => ["UserController" => "list"],
+    "/user/list"      => ["UserController" => "list"],
+    
+    // Doctor routes
+    "/doctors/add"    => ["DoctorController" => "add"],
+    "/doctors/store"  => ["DoctorController" => "store"],
     
     // No match -> null triggers 404
-    default       => null, 
+    default           => null, 
 };
 
 // 7. APPLICATION INITIALIZATION - Create the App instance
