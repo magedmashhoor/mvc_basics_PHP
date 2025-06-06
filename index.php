@@ -37,6 +37,9 @@ $routes = match($path) {
     // Doctor routes
     "/doctors/add"    => ["DoctorController" => "add"],
     "/doctors/store"  => ["DoctorController" => "store"],
+    "/doctors/delete" => ["DoctorController" => "delete"],
+    "/doctors/search" => ["DoctorController" => "search"],
+    "/doctors/destroy"=> ["DoctorController" => "destroy"],
     
     // No match -> null triggers 404
     default           => null, 

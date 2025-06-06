@@ -88,4 +88,84 @@ class Users extends Model
             ];
         }
     }
+
+    /**
+     * ADD DOCTOR METHOD
+     * - Inserts new doctor into database
+     * 
+     * @param array $data - Doctor information
+     * @return bool - Success status
+     */
+    public function addDoctor($data)
+    {
+        try {
+            $sql = "INSERT INTO {$this->table} (doctor_name, GenSpec, SpeSpec, Hospital, Gove, District, Shift_Period, Phone) 
+                    VALUES (:doctor_name, :GenSpec, :SpeSpec, :Hospital, :Gove, :District, :Shift_Period, :Phone)";
+            
+            $stmt = self::$pdo->prepare($sql);
+            
+            return $stmt->execute([
+                ':doctor_name' => $data['doctor_name'],
+                ':GenSpec' => $data['GenSpec'],
+                ':SpeSpec' => $data['SpeSpec'] ?? '',
+                ':Hospital' => $data['Hospital'],
+                ':Gove' => $data['Gove'],
+                ':District' => $data['District'],
+                ':Shift_Period' => $data['Shift_Period'],
+                ':Phone' => $data['Phone']
+            ]);
+            
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * SEARCH DOCTORS METHOD
+     * - Searches doctors by name with LIKE query
+     * 
+     * @param string $query - Search term
+     * @return array - Matching doctors
+     */
+    public function searchDoctors($query)
+    {
+        try {
+            $sql = "SELECT ID, doctor_name, GenSpec, SpeSpec, Hospital, Gove, District, Shift_Period, Phone 
+                    FROM {$this->table} 
+                    WHERE doctor_name LIKE :query 
+                    ORDER BY doctor_name 
+                    LIMIT 10";
+            
+            $stmt = self::$pdo->prepare($sql);
+            $stmt->execute([':query' => '%' . $query . '%']);
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+        } catch (PDOException $e) {
+            error_log("Search error: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * DELETE DOCTOR METHOD
+     * - Deletes doctor by ID
+     * 
+     * @param int $doctorId - Doctor ID to delete
+     * @return bool - Success status
+     */
+    public function deleteDoctor($doctorId)
+    {
+        try {
+            $sql = "DELETE FROM {$this->table} WHERE ID = :id";
+            $stmt = self::$pdo->prepare($sql);
+            
+            return $stmt->execute([':id' => $doctorId]);
+            
+        } catch (PDOException $e) {
+            error_log("Delete error: " . $e->getMessage());
+            return false;
+        }
+    }
 }
